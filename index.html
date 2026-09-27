@@ -30,6 +30,8 @@
     <option value="Bills">Bills</option>
     <option value="Other">Other</option>
 </select>
+        <label>Date:</label>
+<input type="date" id="expenseDate">
 
     <br><br>
 
@@ -40,6 +42,9 @@
     <ul id="expenseList"></ul>
 
     <h2 class="total">Total: ₹<span id="total">0</span></h2>
+        <h2>Spending Summary</h2>
+
+    <ul id="summaryList"></ul>
 
     <script>
         let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
@@ -50,16 +55,28 @@ function displayExpenses() {
     list.innerHTML = "";
 
     let total = 0;
+    let categoryTotals = {
+    Food: 0,
+    Travel: 0,
+    Shopping: 0,
+    Bills: 0,
+    Other: 0
+};
 
     expenses.forEach(function(expense, index) {
 
         total = total + expense.amount;
 
+        categoryTotals[expense.category] =
+            
+        categoryTotals[expense.category] + expense.amount;
+
         let item = document.createElement("li");
 
         item.innerHTML = `
             <strong>${expense.name}</strong><br>
-            ₹${expense.amount} • ${expense.category}
+            ₹${expense.amount} • ${expense.category}<br>
+    📅 ${expense.date}
             <button onclick="deleteExpense(${index})">
                 Delete
             </button>
@@ -69,6 +86,21 @@ function displayExpenses() {
     });
 
     document.getElementById("total").textContent = total;
+
+let summaryList = document.getElementById("summaryList");
+
+summaryList.innerHTML = "";
+
+for (let category in categoryTotals) {
+
+    let item = document.createElement("li");
+
+    item.textContent =
+        category + ": ₹" + categoryTotals[category];
+
+    summaryList.appendChild(item);
+}
+}
 }
 
 function addExpense() {
@@ -81,6 +113,9 @@ function addExpense() {
 
     let category =
         document.getElementById("expenseCategory").value;
+    
+    let date =
+    document.getElementById("expenseDate").value;
 
     if (name === "" || amount <= 0) {
         alert("Please enter a valid expense.");
@@ -90,7 +125,8 @@ function addExpense() {
     let expense = {
         name: name,
         amount: amount,
-        category: category
+        category: category'
+        date: date
     };
 
     expenses.push(expense);
@@ -102,6 +138,7 @@ function addExpense() {
 
     document.getElementById("expenseName").value = "";
     document.getElementById("expenseAmount").value = "";
+    document.getElementById("expenseDate").value = "";
 
     displayExpenses();
 }
