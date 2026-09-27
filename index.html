@@ -42,45 +42,83 @@
     <h2 class="total">Total: ₹<span id="total">0</span></h2>
 
     <script>
-        let total = 0;
+        let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+
+function displayExpenses() {
+
+    let list = document.getElementById("expenseList");
+    list.innerHTML = "";
+
+    let total = 0;
+
+    expenses.forEach(function(expense, index) {
+
+        total = total + expense.amount;
+
+        let item = document.createElement("li");
+
+        item.innerHTML = `
+            <strong>${expense.name}</strong><br>
+            ₹${expense.amount} • ${expense.category}
+            <button onclick="deleteExpense(${index})">
+                Delete
+            </button>
+        `;
+
+        list.appendChild(item);
+    });
+
+    document.getElementById("total").textContent = total;
+}
 
 function addExpense() {
+
     let name = document.getElementById("expenseName").value;
-    let amount = Number(document.getElementById("expenseAmount").value);
-    let category = document.getElementById("expenseCategory").value;
+
+    let amount = Number(
+        document.getElementById("expenseAmount").value
+    );
+
+    let category =
+        document.getElementById("expenseCategory").value;
 
     if (name === "" || amount <= 0) {
         alert("Please enter a valid expense.");
         return;
     }
 
-    let list = document.getElementById("expenseList");
+    let expense = {
+        name: name,
+        amount: amount,
+        category: category
+    };
 
-    let item = document.createElement("li");
+    expenses.push(expense);
 
-    item.innerHTML = `
-        <strong>${name}</strong><br>
-        ₹${amount} • ${category}
-        <button onclick="deleteExpense(this, ${amount})">
-            Delete
-        </button>
-    `;
-
-    list.appendChild(item);
-
-    total = total + amount;
-    document.getElementById("total").textContent = total;
+    localStorage.setItem(
+        "expenses",
+        JSON.stringify(expenses)
+    );
 
     document.getElementById("expenseName").value = "";
     document.getElementById("expenseAmount").value = "";
+
+    displayExpenses();
 }
 
-function deleteExpense(button, amount) {
-    button.parentElement.remove();
+function deleteExpense(index) {
 
-    total = total - amount;
-    document.getElementById("total").textContent = total;
+    expenses.splice(index, 1);
+
+    localStorage.setItem(
+        "expenses",
+        JSON.stringify(expenses)
+    );
+
+    displayExpenses();
 }
+
+displayExpenses();
     </script>
 
     </div>
