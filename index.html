@@ -9,9 +9,11 @@
 
 <body>
 
+    <div class="container">
+
     <h1>My Expense Tracker</h1>
 
-    <p>Track your daily expenses.</p>
+    <p class="subtitle">Track your daily expenses.</p>
 
     <label>Expense name:</label>
     <input type="text" id="expenseName" placeholder="e.g. Lunch">
@@ -29,7 +31,7 @@
 
     <ul id="expenseList"></ul>
 
-    <h2>Total: ₹<span id="total">0</span></h2>
+    <h2 class="total">Total: ₹<span id="total">0</span></h2>
 
     <script>
         let total = 0;
@@ -58,5 +60,6 @@
         }
     </script>
 
+    </div>
 </body>
 </html>
