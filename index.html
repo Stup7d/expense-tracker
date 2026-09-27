@@ -45,6 +45,7 @@
         <h2>Spending Summary</h2>
 
     <ul id="summaryList"></ul>
+    <div id="chart"></div>
 
     <script>
         let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
@@ -99,6 +100,29 @@ for (let category in categoryTotals) {
         category + ": ₹" + categoryTotals[category];
 
     summaryList.appendChild(item);
+}
+    let chart = document.getElementById("chart");
+
+chart.innerHTML = "";
+
+let maxAmount = Math.max(...Object.values(categoryTotals));
+
+for (let category in categoryTotals) {
+
+    let row = document.createElement("div");
+
+    let percentage = maxAmount > 0
+        ? (categoryTotals[category] / maxAmount) * 100
+        : 0;
+
+    row.innerHTML = `
+        <p><strong>${category}</strong> - ₹${categoryTotals[category]}</p>
+        <div class="bar">
+            <div class="bar-fill" style="width: ${percentage}%"></div>
+        </div>
+    `;
+
+    chart.appendChild(row);
 }
 }
 
